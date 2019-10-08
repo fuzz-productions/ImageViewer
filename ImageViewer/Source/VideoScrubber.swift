@@ -94,7 +94,7 @@ open class VideoScrubber: UIControl {
         scrubber.maximumValue = 1000
         scrubber.value = 0
 
-        if let tintColor = tintColor {
+        if let tintColor: UIColor = tintColor {
             timeLabel.attributedText = NSAttributedString(string: "--:--", attributes: [NSAttributedString.Key.foregroundColor : tintColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)])
         }
         timeLabel.textAlignment =  .center
@@ -207,11 +207,10 @@ open class VideoScrubber: UIControl {
 
             let timeString = stringFromTimeInterval(currentTime as TimeInterval)
 
-            if let tintColor = tintColor {
-
-            timeLabel.attributedText = NSAttributedString(string: timeString, attributes: [NSAttributedString.Key.foregroundColor: tintColor, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)])
+            if let tintColor: UIColor = tintColor {
+                timeLabel.attributedText = NSAttributedString(string: timeString, attributes: [NSAttributedString.Key.foregroundColor: tintColor, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)])
             }
-        } else if let tintColor = tintColor {
+        } else if let tintColor: UIColor = tintColor {
             timeLabel.attributedText = NSAttributedString(string: "--:--", attributes: [NSAttributedString.Key.foregroundColor: tintColor, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)])
         }
     }
@@ -232,7 +231,7 @@ open class VideoScrubber: UIControl {
         
         let pauseButtonImage = pauseButton.imageView?.image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
         
-        if let tintColor = tintColor {
+        if let tintColor:UIColor = tintColor {
             timeLabel.attributedText = NSAttributedString(string: "--:--", attributes: [NSAttributedString.Key.foregroundColor : tintColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)])
             
                 playButton.imageView?.tintColor = tintColor
