@@ -106,7 +106,9 @@ open class VideoScrubber: UIControl {
         scrubber.maximumValue = 1000
         scrubber.value = 0
 
-        timeLabel.attributedText = NSAttributedString(string: "--:--", attributes: [NSAttributedString.Key.foregroundColor : self.tintColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)])
+        if let tintColor = tintColor {
+            timeLabel.attributedText = NSAttributedString(string: "--:--", attributes: [NSAttributedString.Key.foregroundColor : tintColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)])
+        }
         timeLabel.textAlignment =  .center
 
         playButton.addTarget(self, action: #selector(play), for: UIControl.Event.touchUpInside)
@@ -238,10 +240,12 @@ open class VideoScrubber: UIControl {
 
             let timeString = stringFromTimeInterval(currentTime as TimeInterval)
 
-            timeLabel.attributedText = NSAttributedString(string: timeString, attributes: [NSAttributedString.Key.foregroundColor : self.tintColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)])
+            if let tintColor = tintColor {
+            timeLabel.attributedText = NSAttributedString(string: timeString, attributes: [NSAttributedString.Key.foregroundColor : tintColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)])
+            }
         }
-        else {
-            timeLabel.attributedText = NSAttributedString(string: "--:--", attributes: [NSAttributedString.Key.foregroundColor : self.tintColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)])
+        else if let tintColor = tintColor {
+            timeLabel.attributedText = NSAttributedString(string: "--:--", attributes: [NSAttributedString.Key.foregroundColor : tintColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)])
         }
     }
 
@@ -258,7 +262,9 @@ open class VideoScrubber: UIControl {
     }
     
     override open func tintColorDidChange() {
-        timeLabel.attributedText = NSAttributedString(string: "--:--", attributes: [NSAttributedString.Key.foregroundColor : self.tintColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)])
+        if let tintColor = tintColor {
+            timeLabel.attributedText = NSAttributedString(string: "--:--", attributes: [NSAttributedString.Key.foregroundColor : tintColor, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)])
+        }
         
         let playButtonImage = playButton.imageView?.image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
         playButton.imageView?.tintColor = self.tintColor
