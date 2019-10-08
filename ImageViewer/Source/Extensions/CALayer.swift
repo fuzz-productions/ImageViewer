@@ -9,12 +9,10 @@
 import UIKit
 
 extension CALayer {
-
     func toImage() -> UIImage {
-
-        UIGraphicsBeginImageContextWithOptions(self.frame.size, false, 0)
+        UIGraphicsBeginImageContextWithOptions(frame.size, false, 0)
         let context = UIGraphicsGetCurrentContext()
-        self.render(in: context!)
+        render(in: context!)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
 

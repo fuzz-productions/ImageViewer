@@ -10,5 +10,4 @@ import UIKit
 
 extension UIImageView: ItemView {}
 
-class ImageViewController: ItemBaseController<UIImageView> {
-}
+class ImageViewController: ItemBaseController<UIImageView> {}

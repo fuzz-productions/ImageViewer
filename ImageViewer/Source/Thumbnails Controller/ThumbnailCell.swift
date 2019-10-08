@@ -9,14 +9,13 @@
 import UIKit
 
 class ThumbnailCell: UICollectionViewCell {
-
     let imageView = UIImageView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         imageView.backgroundColor = UIColor.clear
         imageView.contentMode = .scaleAspectFit
-        self.contentView.addSubview(imageView)
+        contentView.addSubview(imageView)
     }
 
     required init?(coder aDecoder: NSCoder) {

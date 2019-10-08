@@ -9,9 +9,7 @@
 import UIKit
 
 extension CAShapeLayer {
-
     static func replayShape(_ fillColor: UIColor, triangleEdgeLength: CGFloat) -> CAShapeLayer {
-
         let triangle = CAShapeLayer()
         let altitude = (sqrt(3) / 2) * triangleEdgeLength
         triangle.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: altitude, height: triangleEdgeLength))
@@ -22,7 +20,6 @@ extension CAShapeLayer {
     }
 
     static func playShape(_ fillColor: UIColor, triangleEdgeLength: CGFloat) -> CAShapeLayer {
-
         let triangle = CAShapeLayer()
         let altitude = (sqrt(3) / 2) * triangleEdgeLength
         triangle.frame = CGRect(origin: CGPoint.zero, size: CGSize(width: altitude, height: triangleEdgeLength))
@@ -33,7 +30,6 @@ extension CAShapeLayer {
     }
 
     static func pauseShape(_ fillColor: UIColor, elementSize: CGSize, elementDistance: CGFloat) -> CAShapeLayer {
-
         let element = CALayer()
         element.bounds.size = elementSize
         element.frame.origin = CGPoint.zero
@@ -55,7 +51,6 @@ extension CAShapeLayer {
     }
 
     static func circle(_ fillColor: UIColor, diameter: CGFloat) -> CAShapeLayer {
-
         let circle = CAShapeLayer()
         let frame = CGRect(origin: CGPoint.zero, size: CGSize(width: diameter * 2, height: diameter * 2))
         circle.frame = frame
@@ -66,11 +61,10 @@ extension CAShapeLayer {
     }
 
     static func circlePlayShape(_ fillColor: UIColor, diameter: CGFloat) -> CAShapeLayer {
-
         let circle = CAShapeLayer()
         let frame = CGRect(origin: CGPoint.zero, size: CGSize(width: diameter, height: diameter))
         circle.frame = frame
-        let circlePath   = UIBezierPath(ovalIn: frame)
+        let circlePath = UIBezierPath(ovalIn: frame)
         let trianglePath = UIBezierPath.equilateralTriangle(diameter / 2, shiftBy: CGPoint(x: diameter / 3, y: diameter / 4))
 
         circlePath.append(trianglePath)
@@ -81,7 +75,6 @@ extension CAShapeLayer {
     }
 
     static func closeShape(edgeLength: CGFloat) -> CAShapeLayer {
-
         let container = CAShapeLayer()
         container.bounds.size = CGSize(width: edgeLength + 4, height: edgeLength + 4)
         container.frame.origin = CGPoint.zero

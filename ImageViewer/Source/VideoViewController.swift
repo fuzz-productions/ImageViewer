@@ -6,14 +6,12 @@
 //  Copyright © 2016 MailOnline. All rights reserved.
 //
 
-import UIKit
 import AVFoundation
-
+import UIKit
 
 extension VideoView: ItemView {}
 
 class VideoViewController: ItemBaseController<VideoView> {
-
     fileprivate let swipeToDismissFadeOutAccelerationFactor: CGFloat = 6
 
     let videoURL: URL
@@ -23,24 +21,21 @@ class VideoViewController: ItemBaseController<VideoView> {
     let fullHDScreenSizeLandscape = CGSize(width: 1920, height: 1080)
     let fullHDScreenSizePortrait = CGSize(width: 1080, height: 1920)
     let embeddedPlayButton = UIButton.circlePlayButton(70)
-    
+
     private var autoPlayStarted: Bool = false
     private var autoPlayEnabled: Bool = false
 
     init(index: Int, itemCount: Int, fetchImageBlock: @escaping FetchImageBlock, videoURL: URL, scrubber: VideoScrubber, configuration: GalleryConfiguration, isInitialController: Bool = false) {
-
         self.videoURL = videoURL
         self.scrubber = scrubber
-        self.player = AVPlayer(url: self.videoURL)
-        
-        ///Only those options relevant to the paging VideoViewController are explicitly handled here, the rest is handled by ItemViewControllers
+        player = AVPlayer(url: self.videoURL)
+
+        /// Only those options relevant to the paging VideoViewController are explicitly handled here, the rest is handled by ItemViewControllers
         for item in configuration {
-            
             switch item {
-                
-            case .videoAutoPlay(let enabled):
+            case let .videoAutoPlay(enabled):
                 autoPlayEnabled = enabled
-                
+
             default: break
             }
         }
@@ -54,19 +49,18 @@ class VideoViewController: ItemBaseController<VideoView> {
         if isInitialController == true { embeddedPlayButton.alpha = 0 }
 
         embeddedPlayButton.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleBottomMargin, .flexibleRightMargin]
-        self.view.addSubview(embeddedPlayButton)
-        embeddedPlayButton.center = self.view.boundsCenter
+        view.addSubview(embeddedPlayButton)
+        embeddedPlayButton.center = view.boundsCenter
 
         embeddedPlayButton.addTarget(self, action: #selector(playVideoInitially), for: UIControl.Event.touchUpInside)
 
-        self.itemView.player = player
-        self.itemView.contentMode = .scaleAspectFill
+        itemView.player = player
+        itemView.contentMode = .scaleAspectFill
     }
 
     override func viewWillAppear(_ animated: Bool) {
-
-        self.player.addObserver(self, forKeyPath: "status", options: NSKeyValueObservingOptions.new, context: nil)
-        self.player.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.new, context: nil)
+        player.addObserver(self, forKeyPath: "status", options: NSKeyValueObservingOptions.new, context: nil)
+        player.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.new, context: nil)
 
         UIApplication.shared.beginReceivingRemoteControlEvents()
 
@@ -74,9 +68,8 @@ class VideoViewController: ItemBaseController<VideoView> {
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-
-        self.player.removeObserver(self, forKeyPath: "status")
-        self.player.removeObserver(self, forKeyPath: "rate")
+        player.removeObserver(self, forKeyPath: "status")
+        player.removeObserver(self, forKeyPath: "rate")
 
         UIApplication.shared.endReceivingRemoteControlEvents()
 
@@ -92,21 +85,19 @@ class VideoViewController: ItemBaseController<VideoView> {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
-        self.player.pause()
+        player.pause()
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         let isLandscape = itemView.bounds.width >= itemView.bounds.height
-        itemView.bounds.size = aspectFitSize(forContentOfSize: isLandscape ? fullHDScreenSizeLandscape : fullHDScreenSizePortrait, inBounds: self.scrollView.bounds.size)
+        itemView.bounds.size = aspectFitSize(forContentOfSize: isLandscape ? fullHDScreenSizeLandscape : fullHDScreenSizePortrait, inBounds: scrollView.bounds.size)
         itemView.center = scrollView.boundsCenter
     }
 
     @objc func playVideoInitially() {
-
-        self.player.play()
-
+        player.play()
 
         UIView.animate(withDuration: 0.25, animations: { [weak self] in
 
@@ -119,7 +110,6 @@ class VideoViewController: ItemBaseController<VideoView> {
     }
 
     override func closeDecorationViews(_ duration: TimeInterval) {
-
         UIView.animate(withDuration: duration, animations: { [weak self] in
 
             self?.embeddedPlayButton.alpha = 0
@@ -128,36 +118,27 @@ class VideoViewController: ItemBaseController<VideoView> {
     }
 
     override func presentItem(alongsideAnimation: () -> Void, completion: @escaping () -> Void) {
-
         let circleButtonAnimation = {
-
             UIView.animate(withDuration: 0.15, animations: { [weak self] in
                 self?.embeddedPlayButton.alpha = 1
             })
         }
 
         super.presentItem(alongsideAnimation: alongsideAnimation) {
-
             circleButtonAnimation()
             completion()
         }
     }
 
-    override func displacementTargetSize(forSize size: CGSize) -> CGSize {
-
+    override func displacementTargetSize(forSize _: CGSize) -> CGSize {
         let isLandscape = itemView.bounds.width >= itemView.bounds.height
         return aspectFitSize(forContentOfSize: isLandscape ? fullHDScreenSizeLandscape : fullHDScreenSizePortrait, inBounds: rotationAdjustedBounds().size)
     }
 
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "rate" || keyPath == "status" {
-
             fadeOutEmbeddedPlayButton()
-        }
-
-        else if keyPath == "contentOffset" {
-
+        } else if keyPath == "contentOffset" {
             handleSwipeToDismissTransition()
         }
 
@@ -165,16 +146,13 @@ class VideoViewController: ItemBaseController<VideoView> {
     }
 
     func handleSwipeToDismissTransition() {
-
         guard let _ = swipingToDismiss else { return }
 
         embeddedPlayButton.center.y = view.center.y - scrollView.contentOffset.y
     }
 
     func fadeOutEmbeddedPlayButton() {
-
-        if player.isPlaying() && embeddedPlayButton.alpha != 0  {
-
+        if player.isPlaying(), embeddedPlayButton.alpha != 0 {
             UIView.animate(withDuration: 0.3, animations: { [weak self] in
 
                 self?.embeddedPlayButton.alpha = 0
@@ -183,37 +161,30 @@ class VideoViewController: ItemBaseController<VideoView> {
     }
 
     override func remoteControlReceived(with event: UIEvent?) {
-
         if let event = event {
-
             if event.type == UIEvent.EventType.remoteControl {
-
                 switch event.subtype {
-
                 case .remoteControlTogglePlayPause:
 
-                    if self.player.isPlaying()  {
-
-                        self.player.pause()
-                    }
-                    else {
-
-                        self.player.play()
+                    if player.isPlaying() {
+                        player.pause()
+                    } else {
+                        player.play()
                     }
 
                 case .remoteControlPause:
 
-                    self.player.pause()
+                    player.pause()
 
                 case .remoteControlPlay:
 
-                    self.player.play()
+                    player.play()
 
                 case .remoteControlPreviousTrack:
 
-                    self.player.pause()
-                    self.player.seek(to: CMTime(value: 0, timescale: 1))
-                    self.player.play()
+                    player.pause()
+                    player.seek(to: CMTime(value: 0, timescale: 1))
+                    player.play()
 
                 default:
 
@@ -222,11 +193,11 @@ class VideoViewController: ItemBaseController<VideoView> {
             }
         }
     }
-    
+
     private func performAutoPlay() {
         guard autoPlayEnabled else { return }
         guard autoPlayStarted == false else { return }
-        
+
         autoPlayStarted = true
         embeddedPlayButton.isHidden = true
         scrubber.play()

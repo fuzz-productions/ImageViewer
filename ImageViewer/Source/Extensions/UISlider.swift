@@ -9,9 +9,7 @@
 import UIKit
 
 extension Slider {
-
     static func createSlider(_ width: CGFloat, height: CGFloat, pointerDiameter: CGFloat, barHeight: CGFloat) -> Slider {
-
         let slider = Slider(frame: CGRect(x: 0, y: 0, width: width, height: height))
 
         slider.setThumbImage(CAShapeLayer.circle(UIColor.white, diameter: pointerDiameter).toImage(), for: UIControl.State())
@@ -31,13 +29,13 @@ extension Slider {
 
         return slider
     }
-    
+
     override func tintColorDidChange() {
-        self.minimumTrackTintColor = self.tintColor
-        self.maximumTrackTintColor = self.tintColor.shadeDarker()
-        
+        minimumTrackTintColor = tintColor
+        maximumTrackTintColor = tintColor.shadeDarker()
+
         // Correct way would be setting self.thumbTintColor however this has a bug which changes the thumbImage frame
-        let image = self.currentThumbImage?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
-        self.setThumbImage(image, for: UIControl.State.normal)
+        let image = currentThumbImage?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+        setThumbImage(image, for: UIControl.State.normal)
     }
 }

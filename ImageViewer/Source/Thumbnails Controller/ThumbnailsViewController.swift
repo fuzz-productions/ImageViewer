@@ -9,7 +9,6 @@
 import UIKit
 
 class ThumbnailsViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UINavigationBarDelegate {
-
     fileprivate let reuseIdentifier = "ThumbnailCell"
     fileprivate let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
     fileprivate var isAnimating = false
@@ -29,7 +28,7 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
         NotificationCenter.default.addObserver(self, selector: #selector(rotate), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -40,7 +39,7 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
     @objc func rotate() {
         guard UIApplication.isPortraitOnly else { return }
 
-        guard UIDevice.current.orientation.isFlat == false &&
+        guard UIDevice.current.orientation.isFlat == false,
             isAnimating == false else { return }
 
         isAnimating = true
@@ -51,8 +50,7 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
             self?.view.setNeedsLayout()
             self?.view.layoutIfNeeded()
 
-            })
-        { [weak self] finished  in
+        }) { [weak self] _ in
             self?.isAnimating = false
         }
     }
@@ -60,13 +58,13 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let screenWidth = self.view.frame.width
+        let screenWidth = view.frame.width
         layout.sectionInset = UIEdgeInsets(top: 50, left: 8, bottom: 8, right: 8)
-        layout.itemSize = CGSize(width: screenWidth/3 - 8, height: screenWidth/3 - 8)
+        layout.itemSize = CGSize(width: screenWidth / 3 - 8, height: screenWidth / 3 - 8)
         layout.minimumInteritemSpacing = 4
         layout.minimumLineSpacing = 4
 
-        self.collectionView?.register(ThumbnailCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView?.register(ThumbnailCell.self, forCellWithReuseIdentifier: reuseIdentifier)
 
         addCloseButton()
     }
@@ -75,11 +73,11 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
         guard let closeButton = closeButton, let closeLayout = closeLayout else { return }
 
         switch closeLayout {
-        case .pinRight(let marginTop, let marginRight):
+        case let .pinRight(marginTop, marginRight):
             closeButton.autoresizingMask = [.flexibleBottomMargin, .flexibleLeftMargin]
-            closeButton.frame.origin.x = self.view.bounds.size.width - marginRight - closeButton.bounds.size.width
+            closeButton.frame.origin.x = view.bounds.size.width - marginRight - closeButton.bounds.size.width
             closeButton.frame.origin.y = marginTop
-        case .pinLeft(let marginTop, let marginLeft):
+        case let .pinLeft(marginTop, marginLeft):
             closeButton.autoresizingMask = [.flexibleBottomMargin, .flexibleRightMargin]
             closeButton.frame.origin.x = marginLeft
             closeButton.frame.origin.y = marginTop
@@ -87,51 +85,46 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
 
         closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
 
-        self.view.addSubview(closeButton)
+        view.addSubview(closeButton)
     }
 
     @objc func close() {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
         return itemsDataSource.itemCount()
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ThumbnailCell
 
         let item = itemsDataSource.provideGalleryItem((indexPath as NSIndexPath).row)
 
         switch item {
+        case let .image(fetchImageBlock):
 
-        case .image(let fetchImageBlock):
-
-            fetchImageBlock() { image in
+            fetchImageBlock { image in
 
                 if let image = image {
-
                     cell.imageView.image = image
                 }
             }
 
         case .video(let fetchImageBlock, _):
 
-            fetchImageBlock() { image in
+            fetchImageBlock { image in
 
                 if let image = image {
-
                     cell.imageView.image = image
                 }
             }
 
         case .custom(let fetchImageBlock, _):
 
-            fetchImageBlock() { image in
+            fetchImageBlock { image in
 
                 if let image = image {
-
                     cell.imageView.image = image
                 }
             }
@@ -140,7 +133,7 @@ class ThumbnailsViewController: UICollectionViewController, UICollectionViewDele
         return cell
     }
 
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    override func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         onItemSelected?((indexPath as NSIndexPath).row)
         close()
     }

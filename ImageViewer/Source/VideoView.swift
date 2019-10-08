@@ -6,29 +6,23 @@
 //  Copyright © 2016 MailOnline. All rights reserved.
 //
 
-import UIKit
 import AVFoundation
+import UIKit
 
 class VideoView: UIView {
-
     let previewImageView = UIImageView()
     var image: UIImage? { didSet { previewImageView.image = image } }
     var player: AVPlayer? {
-
         willSet {
-
             if newValue == nil {
-
                 player?.removeObserver(self, forKeyPath: "status")
                 player?.removeObserver(self, forKeyPath: "rate")
             }
         }
 
         didSet {
-
-            if  let player = self.player,
+            if let player = self.player,
                 let videoLayer = self.layer as? AVPlayerLayer {
-
                 videoLayer.player = player
                 videoLayer.videoGravity = AVLayerVideoGravity.resizeAspect
 
@@ -38,7 +32,7 @@ class VideoView: UIView {
         }
     }
 
-    override class var layerClass : AnyClass {
+    override class var layerClass: AnyClass {
         return AVPlayerLayer.self
     }
 
@@ -49,7 +43,7 @@ class VideoView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.addSubview(previewImageView)
+        addSubview(previewImageView)
 
         previewImageView.contentMode = .scaleAspectFill
         previewImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -61,21 +55,16 @@ class VideoView: UIView {
     }
 
     deinit {
-
         player?.removeObserver(self, forKeyPath: "status")
         player?.removeObserver(self, forKeyPath: "rate")
     }
 
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-
-        if let status = self.player?.status, let rate = self.player?.rate  {
-
-            if status == .readyToPlay && rate != 0 {
-
+    override func observeValue(forKeyPath _: String?, of _: Any?, change _: [NSKeyValueChangeKey: Any]?, context _: UnsafeMutableRawPointer?) {
+        if let status = self.player?.status, let rate = self.player?.rate {
+            if status == .readyToPlay, rate != 0 {
                 UIView.animate(withDuration: 0.3, animations: { [weak self] in
 
                     if let strongSelf = self {
-
                         strongSelf.previewImageView.alpha = 0
                     }
                 })

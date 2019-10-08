@@ -10,12 +10,11 @@ import UIKit
 
 typealias Duration = TimeInterval
 
-public protocol ItemController: class {
-
+public protocol ItemController: AnyObject {
     var index: Int { get }
     var isInitialController: Bool { get set }
-    var delegate:                 ItemControllerDelegate? { get set }
-    var displacedViewsDataSource: GalleryDisplacedViewsDataSource? { get set }
+    weak var delegate: ItemControllerDelegate? { get set }
+    weak var displacedViewsDataSource: GalleryDisplacedViewsDataSource? { get set }
 
     func fetchImage()
 

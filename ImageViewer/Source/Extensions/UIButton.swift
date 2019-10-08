@@ -9,9 +9,7 @@
 import UIKit
 
 extension UIButton {
-
     static func circlePlayButton(_ diameter: CGFloat) -> UIButton {
-
         let button = UIButton(type: .custom)
         button.frame = CGRect(origin: .zero, size: CGSize(width: diameter, height: diameter))
 
@@ -25,7 +23,6 @@ extension UIButton {
     }
 
     static func replayButton(width: CGFloat, height: CGFloat) -> UIButton {
-
         let smallerEdge = min(width, height)
         let triangleEdgeLength: CGFloat = min(smallerEdge, 20)
 
@@ -49,7 +46,6 @@ extension UIButton {
     }
 
     static func playButton(width: CGFloat, height: CGFloat) -> UIButton {
-
         let smallerEdge = min(width, height)
         let triangleEdgeLength: CGFloat = min(smallerEdge, 20)
 
@@ -72,8 +68,7 @@ extension UIButton {
         return button
     }
 
-    static func pauseButton(width: CGFloat, height: CGFloat) -> UIButton {
-
+    static func pauseButton(width _: CGFloat, height: CGFloat) -> UIButton {
         let button = UIButton(type: .custom)
         button.contentHorizontalAlignment = .center
 
@@ -91,7 +86,6 @@ extension UIButton {
     }
 
     static func closeButton() -> UIButton {
-
         let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 50, height: 50)))
         button.setImage(CAShapeLayer.closeShape(edgeLength: 15).toImage(), for: .normal)
 
@@ -99,16 +93,14 @@ extension UIButton {
     }
 
     static func thumbnailsButton() -> UIButton {
-
         let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 80, height: 50)))
         button.setTitle("See All", for: .normal)
-        //button.titleLabel?.textColor = UIColor.redColor()
+        // button.titleLabel?.textColor = UIColor.redColor()
 
         return button
     }
 
     static func deleteButton() -> UIButton {
-
         let button = UIButton(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 80, height: 50)))
         button.setTitle("Delete", for: .normal)
 
